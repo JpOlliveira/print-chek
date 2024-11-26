@@ -7,6 +7,12 @@
     <Nullable>enable</Nullable>
 
 	<Authors>@JpOlliveira,@ejjonatah,@Luc1anojr</Authors>
+	  
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
+    <PackageReference Include="Aspose.Drawing" Version="24.11.0" />
+    <PackageReference Include="ExcelDataReader" Version="3.7.0" />
+	  
+  </ItemGroup>
 </Project>
