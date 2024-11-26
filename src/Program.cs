@@ -1,5 +1,52 @@
 ﻿using System.Drawing;
+using ExcelDataReader;
+using System.Data;
 using System.Globalization;
+
+System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+var cheques = Enumerable.ToList([new {
+    Nomenclature = default(string)!,
+    Extensive = default(string)!,
+    Value = default(float),
+    City = default(string)!,
+    Date = default(DateOnly),
+}]);
+
+cheques.Clear();
+var filePath = ".\\valores-cheques.xlsx";
+using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+using (var reader = ExcelReaderFactory.CreateReader(stream))
+{
+    var conf = new ExcelDataSetConfiguration
+    {
+        ConfigureDataTable = _ => new ExcelDataTableConfiguration
+        {
+            UseHeaderRow = true
+        }
+    };
+
+    var dataSet = reader.AsDataSet(conf);
+    var table = dataSet.Tables[0].Rows;
+    var e = table.Cast<DataRow>().GetEnumerator();
+
+    e.MoveNext();
+    e.MoveNext();
+    e.MoveNext();
+
+    for (; e.MoveNext() && !e.Current.IsNull(1);)
+    {
+        var row = e.Current;
+        cheques.Add(new
+        {
+            Nomenclature = (string)row[1],
+            Extensive = (string)row[2],
+            Value = (float)(double)row[3],
+            City = (string)row[4],
+            Date = DateOnly.FromDateTime((DateTime)row[5])
+        });
+    }
+}
 
 const int CARACTERS = 140;
 #region Positions
